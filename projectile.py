@@ -2,12 +2,13 @@ import pygame
 import math
 
 class Projectile:
-    def __init__(self, pos, target, dmg):
+    def __init__(self, pos, target, dmg, player=None):
         self.pos = list(pos)
         self.target = target
         self.dmg = dmg
         self.speed = 5
         self.alive = True
+        self.player = player  # 💰 추가
 
     def update(self):
         if not self.target.alive:
@@ -17,7 +18,10 @@ class Projectile:
         dx, dy = self.target.pos[0] - self.pos[0], self.target.pos[1] - self.pos[1]
         dist = math.hypot(dx, dy)
         if dist < self.speed:
-            self.target.take_damage(self.dmg)
+            killed = self.target.take_damage(self.dmg)
+            if killed and self.player:
+                self.player.earn_gold(self.target.reward)
+                self.player.score += 10
             self.alive = False
         else:
             self.pos[0] += self.speed * dx / dist

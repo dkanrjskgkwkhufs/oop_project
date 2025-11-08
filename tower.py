@@ -11,17 +11,16 @@ class Tower:
         self.cooldown = 1.0
         self.last_shot = 0
 
-    def update(self, enemies):
+    def update(self, enemies, player):
         now = time.time()
         if now - self.last_shot < self.cooldown:
             return None
 
-        # 범위 내 적 찾기
         for e in enemies:
             dist = math.dist(self.pos, e.pos)
             if dist <= self.range:
                 self.last_shot = now
-                return Projectile(self.pos, e, self.damage)
+                return Projectile(self.pos, e, self.damage, player)
         return None
 
     def draw(self, screen):

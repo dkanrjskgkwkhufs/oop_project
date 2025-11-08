@@ -1,14 +1,15 @@
 import pygame
 
 class Enemy:
-    def __init__(self, path, damage=10):
+    def __init__(self, path, damage=10, reward=10):
         self.path = path
         self.index = 0
         self.pos = list(path[0])
         self.hp = 100
         self.speed = 1
         self.alive = True
-        self.damage = damage  # 🔹 추가
+        self.damage = damage
+        self.reward = reward
 
     def update(self, base):
         if self.index < len(self.path) - 1:
@@ -21,7 +22,6 @@ class Enemy:
                 self.pos[0] += self.speed * dx / dist
                 self.pos[1] += self.speed * dy / dist
         else:
-            # 도착 시 기지 데미지
             base.take_damage(self.damage)
             self.alive = False
 
@@ -32,3 +32,5 @@ class Enemy:
         self.hp -= dmg
         if self.hp <= 0:
             self.alive = False
+            return True
+        return False
