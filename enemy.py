@@ -1,0 +1,34 @@
+import pygame
+
+class Enemy:
+    def __init__(self, path, damage=10):
+        self.path = path
+        self.index = 0
+        self.pos = list(path[0])
+        self.hp = 100
+        self.speed = 1
+        self.alive = True
+        self.damage = damage  # 🔹 추가
+
+    def update(self, base):
+        if self.index < len(self.path) - 1:
+            target = self.path[self.index + 1]
+            dx, dy = target[0] - self.pos[0], target[1] - self.pos[1]
+            dist = (dx ** 2 + dy ** 2) ** 0.5
+            if dist < self.speed:
+                self.index += 1
+            else:
+                self.pos[0] += self.speed * dx / dist
+                self.pos[1] += self.speed * dy / dist
+        else:
+            # 도착 시 기지 데미지
+            base.take_damage(self.damage)
+            self.alive = False
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, (200, 50, 50), (int(self.pos[0]), int(self.pos[1])), 10)
+
+    def take_damage(self, dmg):
+        self.hp -= dmg
+        if self.hp <= 0:
+            self.alive = False
