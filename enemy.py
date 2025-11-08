@@ -5,7 +5,7 @@ class Enemy:
         self.path = path
         self.index = 0
         self.pos = list(path[0])
-        self.hp = 100
+        self.hp = 50
         self.speed = 1
         self.alive = True
         self.damage = damage

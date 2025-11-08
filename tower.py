@@ -1,9 +1,10 @@
 import pygame
-from projectile import Projectile
 import math
 import time
 
 class Tower:
+    COST = 50
+
     def __init__(self, pos):
         self.pos = pos
         self.range = 150
@@ -20,6 +21,7 @@ class Tower:
             dist = math.dist(self.pos, e.pos)
             if dist <= self.range:
                 self.last_shot = now
+                from projectile import Projectile
                 return Projectile(self.pos, e, self.damage, player)
         return None
 
