@@ -1,5 +1,5 @@
 import pygame
-from map_interface import MapInterface
+from maps.map_interface import MapInterface
 
 class ZigZagMap(MapInterface):
     def __init__(self):

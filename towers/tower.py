@@ -1,7 +1,7 @@
 import pygame
 import math
 import time
-from projectile import Projectile
+from projectile.projectile import Projectile
 
 class Tower:
     COST = 50

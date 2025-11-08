@@ -1,5 +1,5 @@
 import pygame
-from tower import Tower
+from towers.tower import Tower
 import math
 
 class TowerManager:

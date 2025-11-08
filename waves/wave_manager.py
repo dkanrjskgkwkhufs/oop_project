@@ -1,4 +1,4 @@
-from enemy import Enemy
+from enemy.enemy import Enemy
 
 class WaveManager:
     def __init__(self, path, total_enemies):

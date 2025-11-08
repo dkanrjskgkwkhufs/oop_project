@@ -1,4 +1,4 @@
-from base import Base
+from base.base import Base
 import pygame
 
 class Player:

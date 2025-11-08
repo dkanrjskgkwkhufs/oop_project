@@ -1,4 +1,6 @@
-from wave_manager import WaveManager
+from waves.wave_manager import WaveManager
+from maps.straight_map import StraightMap
+from maps.zigzag_map import ZigZagMap
 
 class Level:
     def __init__(self, number, map_type, waves=10):
@@ -29,13 +31,11 @@ class LevelManager:
         level = self.get_current_level()
 
         if level.map_type == "straight":
-            from straight_map import StraightMap
             game_map = StraightMap()
         elif level.map_type == "zigzag":
-            from zigzag_map import ZigZagMap
             game_map = ZigZagMap()
         else:
-            raise ValueError("Unknown map type")
+            raise ValueError("Unknown maps type")
 
         self.current_wave_manager = WaveManager(game_map.get_path(), total_enemies=level.waves)
 

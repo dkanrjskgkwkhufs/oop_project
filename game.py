@@ -1,7 +1,7 @@
 import pygame
-from tower_manager import TowerManager
+from towers.tower_manager import TowerManager
 from player import Player
-from level_manager import LevelManager
+from levels.level_manager import LevelManager
 
 class Game:
     def __init__(self):
