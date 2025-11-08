@@ -15,7 +15,7 @@ class Game:
         self.map = Map()
         self.player = Player(self.map.path[-1])
         self.wave_manager = WaveManager(self.map.path)
-        self.tower_manager = TowerManager()
+        self.tower_manager = TowerManager(self.map)
         self.projectiles = []
 
     def handle_events(self):
