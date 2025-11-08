@@ -1,20 +1,26 @@
 import pygame
-from map import Map
+from straight_map import StraightMap
+from zigzag_map import ZigZagMap
+from tower_manager import TowerManager
 from wave_manager import WaveManager
 from player import Player
-from tower_manager import TowerManager
 
 class Game:
-    def __init__(self):
+    def __init__(self, map_type="zigzag"):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
-        pygame.display.set_caption("Tower Defense - Build System")
+        pygame.display.set_caption("Tower Defense - Multi Map")
         self.clock = pygame.time.Clock()
         self.running = True
+        if map_type == "straight":
+            self.map = StraightMap()
+        elif map_type == "zigzag":
+            self.map = ZigZagMap()
+        else:
+            raise ValueError("Unknown map type")
 
-        self.map = Map()
-        self.player = Player(self.map.path[-1])
-        self.wave_manager = WaveManager(self.map.path)
+        self.player = Player(self.map.get_base_position())
+        self.wave_manager = WaveManager(self.map.get_path())
         self.tower_manager = TowerManager(self.map)
         self.projectiles = []
 
@@ -22,15 +28,10 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-
             elif event.type == pygame.MOUSEMOTION:
                 self.tower_manager.preview_pos = event.pos
-
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                # 왼쪽 클릭 시 타워 설치 시도
-                success = self.tower_manager.handle_mouse(event.pos, self.player)
-                if not success:
-                    print("💸 설치 실패 (골드 부족 or 위치 불가)")
+                self.tower_manager.handle_mouse(event.pos, self.player)
 
     def update(self):
         if self.player.is_game_over():
@@ -38,14 +39,9 @@ class Game:
             self.running = False
             return
 
-        # 적 업데이트
         self.wave_manager.update(self.player.base)
-
-        # 타워 업데이트
         new_proj = self.tower_manager.update(self.wave_manager.enemies, self.player)
         self.projectiles.extend(new_proj)
-
-        # 투사체 업데이트
         for proj in self.projectiles[:]:
             proj.update()
             if not proj.alive:
