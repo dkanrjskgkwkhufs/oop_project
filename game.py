@@ -1,26 +1,22 @@
 import pygame
-from straight_map import StraightMap
-from zigzag_map import ZigZagMap
 from tower_manager import TowerManager
-from wave_manager import WaveManager
 from player import Player
+from level_manager import LevelManager
 
 class Game:
-    def __init__(self, map_type="zigzag"):
+    def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600))
-        pygame.display.set_caption("Tower Defense - Multi Map")
+        pygame.display.set_caption("Tower Defense - Level System")
         self.clock = pygame.time.Clock()
         self.running = True
-        if map_type == "straight":
-            self.map = StraightMap()
-        elif map_type == "zigzag":
-            self.map = ZigZagMap()
-        else:
-            raise ValueError("Unknown map type")
+        self.level_manager = LevelManager()
+        self.load_level()
 
+
+    def load_level(self):
+        self.map, self.wave_manager = self.level_manager.load_map_and_wave()
         self.player = Player(self.map.get_base_position())
-        self.wave_manager = WaveManager(self.map.get_path())
         self.tower_manager = TowerManager(self.map)
         self.projectiles = []
 
@@ -46,6 +42,15 @@ class Game:
             proj.update()
             if not proj.alive:
                 self.projectiles.remove(proj)
+
+        # 레벨 클리어 체크
+        if self.wave_manager.is_wave_cleared():
+            print(f"Level {self.level_manager.get_current_level().number} Cleared!")
+            if self.level_manager.next_level():
+                self.load_level()
+            else:
+                print("모든 레벨 클리어! 게임 종료")
+                self.running = False
 
     def draw(self):
         self.screen.fill((30, 30, 30))
