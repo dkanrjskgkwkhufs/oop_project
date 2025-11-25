@@ -6,8 +6,8 @@ class Enemy(enemy_interface):
         self.path = path
         self.index = 0
         self.pos = list(path[0])
-        self.hp = 50
-        self.speed = 1
+        self.hp = 40
+        self.speed = 3
         self.alive = True
         self.damage = damage
         self.reward = reward
