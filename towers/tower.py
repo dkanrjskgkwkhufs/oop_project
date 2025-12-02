@@ -2,8 +2,9 @@ import pygame
 import math
 import time
 from projectile.projectile import Projectile
+from towers.tower_interface import TowerInterface
 
-class Tower:
+class Tower(TowerInterface):
     COST = 50
 
     def __init__(self, pos):
