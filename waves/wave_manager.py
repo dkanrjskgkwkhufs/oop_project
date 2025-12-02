@@ -1,20 +1,21 @@
-from enemy.enemy import Enemy
-
+import random
 class WaveManager:
-    def __init__(self, path, total_enemies):
+    def __init__(self, path, total_enemies, enemy_types):
         self.path = path
         self.enemies = []
         self.spawn_timer = 0
         self.interval = 90
         self.total_enemies = total_enemies
         self.spawned_enemies = 0
-
+        self.enemy_classes = [et[0] for et in enemy_types]
+        self.enemy_weights = [et[1] for et in enemy_types]
 
     def update(self, base):
         self.spawn_timer += 1
         if self.spawned_enemies < self.total_enemies and self.spawn_timer >= self.interval:
             self.spawn_timer = 0
-            self.enemies.append(Enemy(self.path))
+            enemy_cls = random.choices(self.enemy_classes, weights=self.enemy_weights, k=1)[0]
+            self.enemies.append(enemy_cls(self.path))
             self.spawned_enemies += 1
         for e in self.enemies[:]:
             e.update(base)

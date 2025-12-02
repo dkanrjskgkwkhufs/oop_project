@@ -1,7 +1,7 @@
 import pygame
 from enemy.enemy_interface import enemy_interface
 
-class Enemy(enemy_interface):
+class FastEnemy(enemy_interface):
     def __init__(self, path, damage=10, reward=10):
         self.path = path
         self.index = 0
@@ -13,7 +13,7 @@ class Enemy(enemy_interface):
         self.reward = reward
 
 
-        self.image = pygame.image.load('assets/enemy.png').convert_alpha()
+        self.image = pygame.image.load('assets/fastenemy.png').convert_alpha()
         size = 20
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)
