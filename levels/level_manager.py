@@ -1,17 +1,9 @@
+from levels.level import Level
 from waves.wave_manager import WaveManager
 from maps.straight_map import StraightMap
 from maps.zigzag_map import ZigZagMap
 from enemy.fast_enemy import FastEnemy
 from enemy.enemy import Enemy
-
-
-class Level:
-    def __init__(self, number, map_type, waves=10, enemy_types=None):
-        self.number = number
-        self.map_type = map_type
-        self.waves = waves
-        self.enemy_types = enemy_types or []
-
 
 class LevelManager:
     def __init__(self):
