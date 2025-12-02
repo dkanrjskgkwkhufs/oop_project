@@ -1,5 +1,5 @@
 import pygame
-from oop_project.enemy.enemy_interface import enemy_interface
+from enemy.enemy_interface import enemy_interface
 
 class Enemy(enemy_interface):
     def __init__(self, path, damage=10, reward=10):
