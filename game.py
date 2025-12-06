@@ -2,6 +2,8 @@ import pygame
 from towers.tower_manager import TowerManager
 from player import Player
 from levels.level_manager import LevelManager
+from ui.tower_selection_ui import TowerSelectionUI
+
 
 class Game:
     def __init__(self):
@@ -13,6 +15,12 @@ class Game:
         self.level_manager = LevelManager()
         self.load_level()
 
+        self.tower_ui = TowerSelectionUI()
+        self.selected_tower_type = None  # 콜백으로 전달받을 변수
+
+    def on_tower_selected(self, tower_name):
+        print(f"[UI] 선택됨 → {tower_name}")
+        self.selected_tower_type = tower_name
 
     def load_level(self):
         self.map, self.wave_manager = self.level_manager.load_map_and_wave()
@@ -24,10 +32,25 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.MOUSEMOTION:
+                return
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_t:
+                    self.tower_ui.open(self.on_tower_selected)
+                    return
+            if event.type == pygame.MOUSEMOTION:
                 self.tower_manager.preview_pos = event.pos
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                self.tower_manager.handle_mouse(event.pos, self.player)
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if self.tower_ui.active:
+                    self.tower_ui.handle_event(event)
+                    return
+                if self.selected_tower_type:
+                    self.tower_manager.place_tower(
+                        self.selected_tower_type,
+                        event.pos,
+                        self.player
+                    )
+                    return
 
     def update(self):
         if self.player.is_game_over():
@@ -61,6 +84,7 @@ class Game:
         for proj in self.projectiles:
             proj.draw(self.screen)
         self.player.draw_ui(self.screen)
+        self.tower_ui.draw(self.screen)
         pygame.display.flip()
 
     def run(self):

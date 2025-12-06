@@ -1,45 +1,57 @@
 import pygame
-from towers.tower import Tower
 import math
+from towers.tower_factory import TowerFactory
 
 class TowerManager:
     def __init__(self, game_map):
         self.towers = []
         self.preview_pos = None
         self.map = game_map
+        self.min_distance_from_path = 40
+        self.max_distance_from_path = 180
 
-        # 설치 거리 제한 (길 기준)
-        self.min_distance_from_path = 40  # 너무 가까우면 X
-        self.max_distance_from_path = 180  # 너무 멀면 X
+    def point_to_segment_dist(self, px, py, x1, y1, x2, y2):
+        A = pygame.math.Vector2(x1, y1)
+        B = pygame.math.Vector2(x2, y2)
+        P = pygame.math.Vector2(px, py)
+        AB = B - A
+        AP = P - A
+        t = AB.dot(AP) / AB.length_squared()
+        if t < 0.0:
+            return AP.length()
+        elif t > 1.0:
+            return (P - B).length()
+        else:
+            projection = A + AB * t
+            return (P - projection).length()
 
     def can_place_tower(self, pos):
-        # 기존 타워와 너무 가까운가?
+        px, py = pos
         for t in self.towers:
             if math.dist(pos, t.pos) < 40:
                 return False
-
-        # 길에서의 거리 계산
         min_dist_to_path = float('inf')
-        for p in self.map.path:
-            dist = math.dist(pos, p)
-            if dist < min_dist_to_path:
-                min_dist_to_path = dist
-
-        # 길에서 너무 가깝거나, 너무 멀면 설치 불가
+        for i in range(len(self.map.path) - 1):
+            x1, y1 = self.map.path[i]
+            x2, y2 = self.map.path[i + 1]
+            dist = self.point_to_segment_dist(px, py, x1, y1, x2, y2)
+            min_dist_to_path = min(min_dist_to_path, dist)
         if min_dist_to_path < self.min_distance_from_path:
             return False
         if min_dist_to_path > self.max_distance_from_path:
             return False
-
         return True
 
-    def handle_mouse(self, pos, player):
-        # 설치 가능 여부 + 골드 확인
-        if player.gold >= Tower.COST and self.can_place_tower(pos):
-            player.spend_gold(Tower.COST)
-            self.towers.append(Tower(pos))
-            return True
-        return False
+    def place_tower(self, tower_type, pos, player):
+
+        tower = TowerFactory.create_tower(tower_type, pos)
+        if not tower or player.gold < tower.COST or not self.can_place_tower(pos):
+            return False
+
+        player.spend_gold(tower.COST)
+        self.towers.append(tower)
+        print(f"{tower_type} 타워 설치 완료!")
+        return True
 
     def update(self, enemies, player):
         projectiles = []
@@ -53,7 +65,6 @@ class TowerManager:
         for tower in self.towers:
             tower.draw(screen)
 
-        # 설치 미리보기 (마우스 위치)
         if self.preview_pos:
             color = (0, 255, 0) if self.can_place_tower(self.preview_pos) else (255, 0, 0)
             pygame.draw.circle(screen, color, self.preview_pos, 20, 2)
