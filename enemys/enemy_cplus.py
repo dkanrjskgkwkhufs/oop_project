@@ -11,7 +11,7 @@ class EnemyCplus(enemy_interface):
         self.alive = True
         self.damage = damage
         self.reward = reward
-        self.image = pygame.image.load('assets/enemy.png').convert_alpha()
+        self.image = pygame.image.load('assets/enemy_cplus.png').convert_alpha()
         size = 20
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)

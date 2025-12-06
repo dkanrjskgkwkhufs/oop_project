@@ -4,8 +4,8 @@ from towers.slow_tower import SlowTower
 
 class TowerFactory:
     tower_types = {
-        "basic": BasicTower,
-        "slow": SlowTower
+        "자연과학관": BasicTower,
+        "어문학관": SlowTower
     }
 
     @staticmethod
