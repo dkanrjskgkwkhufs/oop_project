@@ -2,15 +2,15 @@ from levels.level import Level
 from waves.wave_manager import WaveManager
 from maps.straight_map import StraightMap
 from maps.zigzag_map import ZigZagMap
-from enemy.fast_enemy import FastEnemy
-from enemy.enemy import Enemy
+from enemys.enemy_attendance import EnemyAttendance
+from enemys.enemy_cplus import EnemyCplus
 
 class LevelManager:
     def __init__(self):
         self.levels = [
-            Level(1, "straight", waves=5, enemy_types=[(Enemy, 1)]),
-            Level(2, "zigzag", waves=10, enemy_types=[(FastEnemy, 1)]),
-            Level(3, "zigzag", waves=20, enemy_types=[(Enemy, 70), (FastEnemy, 30)])
+            Level(1, "straight", waves=5, enemy_types=[(EnemyCplus, 1)]),
+            Level(2, "zigzag", waves=10, enemy_types=[(EnemyAttendance, 1)]),
+            Level(3, "zigzag", waves=20, enemy_types=[(EnemyCplus, 70), (EnemyAttendance, 30)])
         ]
         self.current_level_index = 0
         self.current_wave_manager = None

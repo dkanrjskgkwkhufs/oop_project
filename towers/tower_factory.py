@@ -1,8 +1,11 @@
 from towers.basic_tower import BasicTower
+from towers.slow_tower import SlowTower
+
 
 class TowerFactory:
     tower_types = {
         "basic": BasicTower,
+        "slow": SlowTower
     }
 
     @staticmethod

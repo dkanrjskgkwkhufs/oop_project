@@ -1,7 +1,7 @@
 import pygame
 import math
 
-class Projectile:
+class BasicProjectile:
     def __init__(self, pos, target, dmg, player=None):
         self.pos = list(pos)
         self.target = target

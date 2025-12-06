@@ -3,7 +3,7 @@ import pygame
 class TowerSelectionUI:
     def __init__(self):
         self.active = False
-        self.options = ["basic"]
+        self.options = ["basic", "slow"]
         self.rects = []
         self.on_select = None
 

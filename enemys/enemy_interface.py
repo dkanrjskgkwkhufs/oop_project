@@ -16,3 +16,6 @@ class enemy_interface(ABC):
     def take_damage(self, dmg: float) -> bool:
         pass
 
+    @abstractmethod
+    def apply_slow(self, rate: float):
+        pass

@@ -1,23 +1,20 @@
 import pygame
-from enemy.enemy_interface import enemy_interface
+from enemys.enemy_interface import enemy_interface
 
-class FastEnemy(enemy_interface):
+class EnemyCplus(enemy_interface):
     def __init__(self, path, damage=10, reward=10):
         self.path = path
         self.index = 0
         self.pos = list(path[0])
-        self.hp = 40
-        self.speed = 3
+        self.hp = 50
+        self.speed = 1
         self.alive = True
         self.damage = damage
         self.reward = reward
-
-
-        self.image = pygame.image.load('assets/fastenemy.png').convert_alpha()
+        self.image = pygame.image.load('assets/enemy.png').convert_alpha()
         size = 20
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)
-
 
     def update(self, base):
         if self.index < len(self.path) - 1:
@@ -43,3 +40,5 @@ class FastEnemy(enemy_interface):
             self.alive = False
             return True
         return False
+    def apply_slow(self, rate: float):
+        self.speed *= rate
