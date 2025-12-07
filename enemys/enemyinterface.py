@@ -2,7 +2,7 @@ import pygame
 from abc import ABC, abstractmethod
 
 
-class enemy_interface(ABC):
+class EnemyInterface(ABC):
 
     @abstractmethod
     def update(self, base):

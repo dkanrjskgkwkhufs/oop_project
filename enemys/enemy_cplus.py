@@ -1,7 +1,7 @@
 import pygame
-from enemys.enemy_interface import enemy_interface
+from enemys.enemyinterface import EnemyInterface
 
-class EnemyCplus(enemy_interface):
+class EnemyCplus(EnemyInterface):
     def __init__(self, path, damage=10, reward=10):
         self.path = path
         self.index = 0
