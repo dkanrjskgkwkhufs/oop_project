@@ -15,7 +15,7 @@ class BasicTower(TowerInterface):
         self.cooldown = 1.0
         self.last_shot = 0
         self.image = pygame.image.load("assets/building/math.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.transform.scale(self.image, (80, 80))
         self.rect = self.image.get_rect(center=self.pos)
 
     @property

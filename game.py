@@ -9,12 +9,23 @@ from ui.tower_selection_ui import TowerSelectionUI
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         info = pygame.display.Info()
         self.WIDTH = info.current_w
         self.HEIGHT = info.current_h
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.FULLSCREEN)
         self.clock = pygame.time.Clock()
         self.running = True
+        self.intro_bgm_path = "assets/sound/opening.mp3"
+        self.ingame_bgm_path = "assets/sound/ingame.mp3"
+        self.outro_happy_path = "assets/sound/happy.mp3"
+        self.outro_sad_path = "assets/sound/sad.mp3"
+
+        pygame.mixer.music.load(self.intro_bgm_path)
+        pygame.mixer.music.set_volume(0.4)
+        pygame.mixer.music.play(-1)
+
+        self.ingame_bgm_started = False
         self.level_manager = LevelManager(self.WIDTH, self.HEIGHT)
         self.load_level()
         self.tower_ui = TowerSelectionUI()
@@ -52,11 +63,16 @@ class Game:
                     self.tower_ui.handle_event(event)
                     return
                 if self.selected_tower_type:
-                    self.tower_manager.place_tower(self.selected_tower_type, event.pos, self.player)
+                    self.tower_manager.place_tower(
+                        self.selected_tower_type, event.pos, self.player
+                    )
                     return
 
     def update(self):
         if self.player.is_game_over():
+            pygame.mixer.music.fadeout(1500)
+            pygame.mixer.music.load(self.outro_sad_path)
+            pygame.mixer.music.play(1)
             self.intro_outro_ui.show_fail_outro()
             self.running = False
             return
@@ -73,12 +89,20 @@ class Game:
             if self.level_manager.next_level():
                 self.load_level()
             else:
+                pygame.mixer.music.fadeout(1500)
+                pygame.mixer.music.load(self.outro_happy_path)
+                pygame.mixer.music.play(1)
                 self.intro_outro_ui.show_outro()
                 self.running = False
             self.countdown_active = False
             self.waiting_for_next_level = False
             return
 
+        if len(self.wave_manager.enemies) > 0 and not self.ingame_bgm_started:
+            pygame.mixer.music.fadeout(2000)
+            pygame.mixer.music.load(self.ingame_bgm_path)
+            pygame.mixer.music.play(-1)
+            self.ingame_bgm_started = True
         self.wave_manager.update(self.player.base)
         new_proj = self.tower_manager.update(self.wave_manager.enemies, self.player)
         self.projectiles.extend(new_proj)
@@ -104,13 +128,13 @@ class Game:
         if self.waiting_for_next_level and not self.countdown_active:
             font = pygame.font.Font(None, 80)
             text = font.render("Level Cleared!", True, (255, 255, 0))
-            self.screen.blit(text, (self.WIDTH//2 - 200, self.HEIGHT//2 - 200))
+            self.screen.blit(text, (self.WIDTH // 2 - 200, self.HEIGHT // 2 - 200))
         if self.waiting_for_next_level and self.countdown_active:
             elapsed = time.time() - self.countdown_start_time
             remaining = int(self.countdown_duration - elapsed) + 1
             font = pygame.font.Font(None, 150)
             text = font.render(str(remaining), True, (255, 50, 50))
-            rect = text.get_rect(center=(self.WIDTH//2, self.HEIGHT//2))
+            rect = text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
             self.screen.blit(text, rect)
 
         pygame.display.flip()

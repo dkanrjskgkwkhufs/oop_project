@@ -18,7 +18,7 @@ class LaserTower(TowerInterface):
         self.target = None
         self.laser_disconnect_time = 0.5
         self.image = pygame.image.load("assets/building/ai.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.image = pygame.transform.scale(self.image, (80, 80))
         self.rect = self.image.get_rect(center=self.pos)
     @property
     def pos(self):

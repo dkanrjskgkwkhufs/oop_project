@@ -15,7 +15,7 @@ class EnemyAttendance(EnemyInterface):
         self.invisible_until = 0
         self.invisibility_triggered = False
         self.image = pygame.image.load('assets/enemies/enemy_attendance.png').convert_alpha()
-        size = 50
+        size = 70
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)
 

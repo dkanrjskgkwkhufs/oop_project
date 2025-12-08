@@ -6,15 +6,15 @@ class CampusMap(MapInterface):
         bg = pygame.image.load("assets/map.png").convert()
         self.background = pygame.transform.scale(bg, (width, height))
         self.path = [
-            (400, 650),
-            (200, 650),
-            (200, 510),
-            (1000, 510),
-            (1000, 370),
-            (200, 370),
-            (200, 280),
-            (1000, 280),
-            (1000, 180)
+            (324, 740),
+            (202, 739),
+            (208, 565),
+            (980, 560),
+            (977, 420),
+            (204, 419),
+            (209, 314),
+            (980, 299),
+            (971, 211)
         ]
 
 

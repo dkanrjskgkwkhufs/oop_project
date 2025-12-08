@@ -12,7 +12,7 @@ class EnemyExam(EnemyInterface):
         self.damage = damage
         self.reward = reward
         self.image = pygame.image.load('assets/enemies/enemy_exam.png').convert_alpha()
-        size = 50
+        size = 70
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)
 

@@ -6,7 +6,7 @@ class Base:
         self.max_hp = hp
         self.hp = hp
         self.image = pygame.image.load("assets/base.png").convert_alpha()
-        size = 60
+        size = 100
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.position)
 
