@@ -1,17 +1,17 @@
 import pygame
 from enemys.enemyinterface import EnemyInterface
 
-class EnemyCplus(EnemyInterface):
+class EnemyLateness(EnemyInterface):
     def __init__(self, path, damage=10, reward=10):
         self.path = path
         self.index = 0
         self.pos = list(path[0])
         self.hp = 50
-        self.speed = 1
+        self.speed = 3
         self.alive = True
         self.damage = damage
         self.reward = reward
-        self.image = pygame.image.load('assets/enemies/enemy_cplus.png').convert_alpha()
+        self.image = pygame.image.load('assets/enemies/enemy_lateness.png').convert_alpha()
         size = 50
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)
@@ -41,4 +41,4 @@ class EnemyCplus(EnemyInterface):
             return True
         return False
     def apply_slow(self, rate: float):
-        self.speed *= rate
+        pass

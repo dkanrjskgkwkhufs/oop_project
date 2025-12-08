@@ -11,15 +11,33 @@ class EnemyAttendance(EnemyInterface):
         self.alive = True
         self.damage = damage
         self.reward = reward
-
-
-        self.image = pygame.image.load('assets/fastenemy.png').convert_alpha()
-        size = 20
+        self.invisible = False
+        self.invisible_until = 0
+        self.invisibility_triggered = False
+        self.image = pygame.image.load('assets/enemies/enemy_attendance.png').convert_alpha()
+        size = 50
         self.image = pygame.transform.scale(self.image, (size, size))
         self.rect = self.image.get_rect(center=self.pos)
 
+        self.alpha = 255
+    def start_invisibility(self, duration=3000):
+        self.invisible = True
+        self.invisible_until = pygame.time.get_ticks() + duration
 
     def update(self, base):
+        now = pygame.time.get_ticks()
+        if self.hp <= 20 and not self.invisibility_triggered:
+            self.start_invisibility(3000)  # 3초
+            self.invisibility_triggered = True
+        if self.invisible and now >= self.invisible_until:
+            self.invisible = False
+        if self.invisible:
+            if self.alpha > 80:
+                self.alpha -= 8
+        else:
+            if self.alpha < 255:
+                self.alpha += 8
+        self.image.set_alpha(self.alpha)
         if self.index < len(self.path) - 1:
             target = self.path[self.index + 1]
             dx, dy = target[0] - self.pos[0], target[1] - self.pos[1]
@@ -37,7 +55,10 @@ class EnemyAttendance(EnemyInterface):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
+
     def take_damage(self, dmg):
+        if self.invisible:
+            return False
         self.hp -= dmg
         if self.hp <= 0:
             self.alive = False
@@ -45,4 +66,6 @@ class EnemyAttendance(EnemyInterface):
         return False
 
     def apply_slow(self, rate: float):
+        if self.invisible:
+            return False
         self.speed *= rate

@@ -2,19 +2,19 @@ import pygame
 from maps.map_interface import MapInterface
 
 class CampusMap(MapInterface):
-    def __init__(self):
-        self.background = pygame.image.load("assets/map.png")
-        self.background = pygame.transform.scale(self.background, (800, 600))
+    def __init__(self, width, height):
+        bg = pygame.image.load("assets/map.png").convert()
+        self.background = pygame.transform.scale(bg, (width, height))
         self.path = [
-            (200, 525),
-            (150, 525),
-            (150, 425),
-            (600, 425),
-            (600, 325),
-            (100, 325),
-            (100, 225),
-            (600, 225),
-            (600, 125)
+            (400, 650),
+            (200, 650),
+            (200, 510),
+            (1000, 510),
+            (1000, 370),
+            (200, 370),
+            (200, 280),
+            (1000, 280),
+            (1000, 180)
         ]
 
 

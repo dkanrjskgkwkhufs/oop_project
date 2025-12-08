@@ -8,11 +8,13 @@ from ui.tower_selection_ui import TowerSelectionUI
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
-        pygame.display.set_caption("Tower Defense - Level System")
+        info = pygame.display.Info()
+        self.WIDTH = info.current_w
+        self.HEIGHT = info.current_h
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.FULLSCREEN)
         self.clock = pygame.time.Clock()
         self.running = True
-        self.level_manager = LevelManager()
+        self.level_manager = LevelManager(self.WIDTH, self.HEIGHT)
         self.load_level()
         self.tower_ui = TowerSelectionUI()
         self.selected_tower_type = None
