@@ -22,9 +22,11 @@ class SlowProjectile:
 
         if dist < self.speed:
             self.target.apply_slow(self.slow_rate)
-            self.target.take_damage(self.damage)
+            killed = self.target.take_damage(self.damage)
+            if killed and self.player:
+                self.player.earn_gold(self.target.reward)
+                self.player.score += self.target.reward
             self.alive = False
-            return
 
         self.pos[0] += self.speed * dx / dist
         self.pos[1] += self.speed * dy / dist

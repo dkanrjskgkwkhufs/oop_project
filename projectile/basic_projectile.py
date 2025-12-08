@@ -21,7 +21,7 @@ class BasicProjectile:
             killed = self.target.take_damage(self.dmg)
             if killed and self.player:
                 self.player.earn_gold(self.target.reward)
-                self.player.score += 10
+                self.player.score += self.target.reward
             self.alive = False
         else:
             self.pos[0] += self.speed * dx / dist

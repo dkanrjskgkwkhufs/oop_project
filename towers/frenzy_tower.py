@@ -2,19 +2,22 @@ import math
 import time
 import pygame
 from projectile.basic_projectile import BasicProjectile
+
 from towers.tower_interface import TowerInterface
 
 
-class BasicTower(TowerInterface):
-    COST = 50
+class FrenzyTower(TowerInterface):
+    COST = 80
 
     def __init__(self, pos):
         self.pos = pos
         self.range = 150
-        self.damage = 20
-        self.cooldown = 1.0
+        self.damage = 15
+        self.cooldown = 1.2
+        self.min_cooldown = 0.15
+        self.cooldown_reduction = 0.05  # 발사마다 줄어드는 쿨타임
         self.last_shot = 0
-        self.image = pygame.image.load("assets/building/math.png").convert_alpha()
+        self.image = pygame.image.load("assets/building/club.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.image.get_rect(center=self.pos)
 
@@ -24,9 +27,10 @@ class BasicTower(TowerInterface):
     @pos.setter
     def pos(self, value):
         self._pos = (int(value[0]), int(value[1]))
+
     @property
     def cost(self):
-        return BasicTower.COST
+        return FrenzyTower.COST
 
     def update(self, enemies, player):
         now = time.time()
@@ -36,10 +40,12 @@ class BasicTower(TowerInterface):
         for e in enemies:
             if math.dist(self.pos, e.pos) <= self.range:
                 self.last_shot = now
-                return BasicProjectile(self.pos, e, self.damage, player)
+                self.cooldown = max(self.min_cooldown, self.cooldown - self.cooldown_reduction)
+                return BasicProjectile(self.pos, e, self.damage)
+
         return None
 
     def draw(self, screen):
         self.rect.center = self.pos
         screen.blit(self.image, self.rect)
-        pygame.draw.circle(screen, (50, 100, 50), self.pos, self.range, 1)
+        pygame.draw.circle(screen, (120, 40, 40), self.pos, self.range, 1)

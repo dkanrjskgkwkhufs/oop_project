@@ -15,6 +15,9 @@ class SlowTower(TowerInterface):
         self.dmg = 10
         self.cooldown = 1.2
         self.last_shot = 0
+        self.image = pygame.image.load("assets/building/language.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.rect = self.image.get_rect(center=self.pos)
     @property
     def pos(self):
         return self._pos
@@ -45,5 +48,6 @@ class SlowTower(TowerInterface):
         return None
 
     def draw(self, screen):
-        pygame.draw.circle(screen, (100, 180, 255), self.pos, 15)  # 파란 계열
+        self.rect.center = self.pos
+        screen.blit(self.image, self.rect)
         pygame.draw.circle(screen, (80, 140, 200), self.pos, self.range, 1)

@@ -1,0 +1,32 @@
+import pygame
+import math
+
+class GoldProjectile:
+    def __init__(self, pos, target, dmg, reward_mult, player=None):
+        self.pos = list(pos)
+        self.target = target
+        self.dmg = dmg
+        self.speed = 5
+        self.alive = True
+        self.player = player
+        self.reward_multiplier = reward_mult
+
+    def update(self):
+        if not self.target.alive:
+            self.alive = False
+            return
+
+        dx, dy = self.target.pos[0] - self.pos[0], self.target.pos[1] - self.pos[1]
+        dist = math.hypot(dx, dy)
+        if dist < self.speed:
+            killed = self.target.take_damage(self.dmg)
+            if killed and self.player:
+                self.player.earn_gold(self.target.reward * self.reward_multiplier)
+                self.player.score += self.target.reward
+            self.alive = False
+        else:
+            self.pos[0] += self.speed * dx / dist
+            self.pos[1] += self.speed * dy / dist
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, (255, 255, 0), (int(self.pos[0]), int(self.pos[1])), 4)

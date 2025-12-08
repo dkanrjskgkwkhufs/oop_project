@@ -3,10 +3,13 @@ import pygame
 class TowerSelectionUI:
     def __init__(self):
         self.active = False
-        self.options = ["자연과학관", "어문학관"]
+        self.options = ["자연과학관", "어문학관", "인문경상관", "학생회관", "ai융합대학"]
         self.introduction = [
-            "모든 학문의 기초가 되는 자연 과학처럼 기본적인 타워",
-            "복잡한 문법체계가 적들을 얼어붙게 만듭니다."
+            "모든 학문의 기초가 되는 자연 과학처럼 기본적인 타워 (50 Cost)",
+            "복잡한 문법체계가 적들을 얼어붙게 만듭니다.(40 Cost)",
+            "골드 수급이 원활해 집니다. (60 Cost)",
+            "학생들이 점점 모여들어 공격속도가 증가합니다. (80 Cost)",
+            "AI가 적들을 학습 하여 점점 약점을 찾아 강하게 공격합니다.(100 Cost)"
         ]
 
         self.rects = []
