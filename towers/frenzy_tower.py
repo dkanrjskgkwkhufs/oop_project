@@ -18,7 +18,7 @@ class FrenzyTower(TowerInterface):
         self.cooldown_reduction = 0.05  # 발사마다 줄어드는 쿨타임
         self.last_shot = 0
         self.image = pygame.image.load("assets/building/club.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=self.pos)
 
     @property
@@ -41,7 +41,7 @@ class FrenzyTower(TowerInterface):
             if math.dist(self.pos, e.pos) <= self.range:
                 self.last_shot = now
                 self.cooldown = max(self.min_cooldown, self.cooldown - self.cooldown_reduction)
-                return BasicProjectile(self.pos, e, self.damage)
+                return BasicProjectile(self.pos, e, self.damage, player)
 
         return None
 

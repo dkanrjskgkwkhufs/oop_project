@@ -1,11 +1,14 @@
 import pygame
 
 class Base:
-    def __init__(self, position, hp=100):
+    def __init__(self, position, hp=200):
         self.position = position
         self.max_hp = hp
         self.hp = hp
-        self.radius = 30
+        self.image = pygame.image.load("assets/base.png").convert_alpha()
+        size = 60
+        self.image = pygame.transform.scale(self.image, (size, size))
+        self.rect = self.image.get_rect(center=self.position)
 
     def take_damage(self, damage):
         self.hp -= damage
@@ -16,12 +19,14 @@ class Base:
         return self.hp <= 0
 
     def draw(self, screen):
-        # 본체
-        pygame.draw.circle(screen, (100, 150, 255), self.position, self.radius)
+        screen.blit(self.image, self.rect)
 
-        # HP 바
         bar_w = 60
         bar_h = 8
         ratio = self.hp / self.max_hp
-        pygame.draw.rect(screen, (50, 50, 50), (self.position[0] - bar_w//2, self.position[1] - 50, bar_w, bar_h))
-        pygame.draw.rect(screen, (0, 200, 0), (self.position[0] - bar_w//2, self.position[1] - 50, int(bar_w * ratio), bar_h))
+
+        bar_x = self.position[0] - bar_w // 2
+        bar_y = self.position[1] - self.rect.height // 2 - 15
+
+        pygame.draw.rect(screen, (50, 50, 50), (bar_x, bar_y, bar_w, bar_h))
+        pygame.draw.rect(screen, (0, 200, 0), (bar_x, bar_y, int(bar_w * ratio), bar_h))

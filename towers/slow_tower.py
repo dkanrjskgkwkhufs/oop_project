@@ -16,7 +16,7 @@ class SlowTower(TowerInterface):
         self.cooldown = 1.2
         self.last_shot = 0
         self.image = pygame.image.load("assets/building/language.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=self.pos)
     @property
     def pos(self):

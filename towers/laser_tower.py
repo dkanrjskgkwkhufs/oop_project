@@ -18,7 +18,7 @@ class LaserTower(TowerInterface):
         self.target = None
         self.laser_disconnect_time = 0.5
         self.image = pygame.image.load("assets/building/ai.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=self.pos)
     @property
     def pos(self):
@@ -52,6 +52,8 @@ class LaserTower(TowerInterface):
             self.damage += self.damage_gain
 
             if killed:
+                player.earn_gold(self.target.reward)
+                player.score += self.target.reward
                 self.target = None
                 self.damage = self.base_damage
 

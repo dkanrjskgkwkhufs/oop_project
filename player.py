@@ -20,7 +20,7 @@ class Player:
     def is_game_over(self):
         return self.base.is_destroyed()
 
-    def draw_ui(self, screen):
-        text = f"Gold: {self.gold}   HP: {self.base.hp}/{self.base.max_hp}   Score: {self.score}"
+    def draw_ui(self, screen, level):
+        text = f"Gold: {self.gold}   HP: {self.base.hp}/{self.base.max_hp}   Score: {self.score}     Level:  {level}"
         img = self.font.render(text, True, (255, 255, 255))
         screen.blit(img, (20, 20))

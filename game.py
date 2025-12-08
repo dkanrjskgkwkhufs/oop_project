@@ -21,6 +21,9 @@ class Game:
         self.waiting_for_next_level = False
         self.next_level_time = 0
         self.level_clear_delay = 3
+        self.countdown_active = False
+        self.countdown_start_time = 0
+        self.countdown_duration = 3
 
     def on_tower_selected(self, tower_name):
         self.selected_tower_type = tower_name
@@ -48,9 +51,7 @@ class Game:
                     self.tower_ui.handle_event(event)
                     return
                 if self.selected_tower_type:
-                    self.tower_manager.place_tower(
-                        self.selected_tower_type, event.pos, self.player
-                    )
+                    self.tower_manager.place_tower(self.selected_tower_type, event.pos, self.player)
                     return
 
     def update(self):
@@ -58,12 +59,20 @@ class Game:
             self.running = False
             return
         if self.waiting_for_next_level:
-            if time.time() < self.next_level_time:
+            if not self.countdown_active:
+                if time.time() < self.next_level_time:
+                    return
+                self.countdown_active = True
+                self.countdown_start_time = time.time()
+                return
+            elapsed = time.time() - self.countdown_start_time
+            if elapsed < self.countdown_duration:
                 return
             if self.level_manager.next_level():
                 self.load_level()
             else:
                 self.running = False
+            self.countdown_active = False
             self.waiting_for_next_level = False
             return
 
@@ -87,12 +96,19 @@ class Game:
         self.tower_manager.draw(self.screen)
         for proj in self.projectiles:
             proj.draw(self.screen)
-        self.player.draw_ui(self.screen)
+        self.player.draw_ui(self.screen, level=self.level_manager.get_current_level().number)
         self.tower_ui.draw(self.screen)
-        if self.waiting_for_next_level:
-            font = pygame.font.Font(None, 48)
+        if self.waiting_for_next_level and not self.countdown_active:
+            font = pygame.font.Font(None, 80)
             text = font.render("Level Cleared!", True, (255, 255, 0))
-            self.screen.blit(text, (290, 260))
+            self.screen.blit(text, (self.WIDTH//2 - 200, self.HEIGHT//2 - 200))
+        if self.waiting_for_next_level and self.countdown_active:
+            elapsed = time.time() - self.countdown_start_time
+            remaining = int(self.countdown_duration - elapsed) + 1
+            font = pygame.font.Font(None, 150)
+            text = font.render(str(remaining), True, (255, 50, 50))
+            rect = text.get_rect(center=(self.WIDTH//2, self.HEIGHT//2))
+            self.screen.blit(text, rect)
 
         pygame.display.flip()
 
