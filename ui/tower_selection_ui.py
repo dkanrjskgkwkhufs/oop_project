@@ -4,13 +4,13 @@ class TowerSelectionUI:
     def __init__(self):
         self.active = False
         self.options = ["자연과학관", "어문학관", "인문경상관", "학생회관", "ai융합대학"]
-        self.introduction = [
-            "모든 학문의 기초가 되는 자연 과학처럼 기본적인 타워 (50 Cost)",
-            "복잡한 문법체계가 적들을 얼어붙게 만듭니다.(40 Cost)",
-            "골드 수급이 원활해 집니다. (60 Cost)",
-            "학생들이 점점 모여들어 공격속도가 증가합니다. (80 Cost)",
-            "AI가 적들을 학습 하여 점점 약점을 찾아 강하게 공격합니다.(100 Cost)"
-        ]
+        self.images = {
+            "자연과학관": pygame.image.load("assets/button/basic.png"),
+            "어문학관": pygame.image.load("assets/button/slow.png"),
+            "인문경상관": pygame.image.load("assets/button/gold.png"),
+            "학생회관": pygame.image.load("assets/button/frenzy.png"),
+            "ai융합대학": pygame.image.load("assets/button/laser.png"),
+        }
 
         self.rects = []
         self.on_select = None
@@ -28,16 +28,18 @@ class TowerSelectionUI:
         self.rects = []
         x, y = 100, 100
         for option in self.options:
-            rect = pygame.Rect(x, y, 120, 50)
-            self.rects.append((option, rect))
-            y += 90
+            img = self.images[option]
+            scaled = pygame.transform.smoothscale(img, (380, 210))
+            img_rect = scaled.get_rect(topleft=(x, y))
+            self.rects.append((option, scaled, img_rect))
+            y += 160
 
     def handle_event(self, event):
         if not self.active:
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            for option, rect in self.rects:
+            for option, img, rect in self.rects:
                 if rect.collidepoint(event.pos):
                     if self.on_select:
                         self.on_select(option)
@@ -47,17 +49,5 @@ class TowerSelectionUI:
     def draw(self, screen):
         if not self.active:
             return
-
-        font_title = pygame.font.Font("C:/Windows/Fonts/malgun.ttf", 16)
-        font_intro = pygame.font.Font("C:/Windows/Fonts/malgun.ttf", 10)
-
-        for (option, rect), intro in zip(self.rects, self.introduction):
-            pygame.draw.rect(screen, (100, 100, 100), rect)
-
-            # 타워 이름
-            text = font_title.render(option, True, (255, 255, 255))
-            screen.blit(text, (rect.x + 10, rect.y + 10))
-
-            # 설명
-            intro_text = font_intro.render(intro, True, (230, 230, 230))
-            screen.blit(intro_text, (rect.x, rect.y + 55))
+        for option, img, rect in self.rects:
+            screen.blit(img, rect)

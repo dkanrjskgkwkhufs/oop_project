@@ -16,16 +16,6 @@ class Game:
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.FULLSCREEN)
         self.clock = pygame.time.Clock()
         self.running = True
-        self.intro_bgm_path = "assets/sound/opening.mp3"
-        self.ingame_bgm_path = "assets/sound/ingame.mp3"
-        self.outro_happy_path = "assets/sound/happy.mp3"
-        self.outro_sad_path = "assets/sound/sad.mp3"
-
-        pygame.mixer.music.load(self.intro_bgm_path)
-        pygame.mixer.music.set_volume(0.4)
-        pygame.mixer.music.play(-1)
-
-        self.ingame_bgm_started = False
         self.level_manager = LevelManager(self.WIDTH, self.HEIGHT)
         self.load_level()
         self.tower_ui = TowerSelectionUI()
@@ -37,14 +27,22 @@ class Game:
         self.countdown_start_time = 0
         self.countdown_duration = 3
         self.intro_outro_ui = IntroOutroUI(self.WIDTH, self.HEIGHT, self.screen, self.clock)
-    def on_tower_selected(self, tower_name):
-        self.selected_tower_type = tower_name
-
+        self.intro_bgm_path = "assets/sound/opening.mp3"
+        self.ingame_bgm_path = "assets/sound/ingame.mp3"
+        self.outro_happy_path = "assets/sound/happy.mp3"
+        self.outro_sad_path = "assets/sound/sad.mp3"
+        pygame.mixer.music.load(self.intro_bgm_path)
+        pygame.mixer.music.set_volume(0.4)
+        pygame.mixer.music.play(-1)
+        self.ingame_bgm_started = False
     def load_level(self):
         self.map, self.wave_manager = self.level_manager.load_map_and_wave()
         self.player = Player(self.map.get_base_position())
         self.tower_manager = TowerManager(self.map)
         self.projectiles = []
+
+    def on_tower_selected(self, tower_name):
+        self.selected_tower_type = tower_name
 
     def handle_events(self):
         for event in pygame.event.get():
