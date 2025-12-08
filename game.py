@@ -3,6 +3,7 @@ import time
 from towers.tower_manager import TowerManager
 from player import Player
 from levels.level_manager import LevelManager
+from ui.intro_outro_ui import IntroOutroUI
 from ui.tower_selection_ui import TowerSelectionUI
 
 class Game:
@@ -24,7 +25,7 @@ class Game:
         self.countdown_active = False
         self.countdown_start_time = 0
         self.countdown_duration = 3
-
+        self.intro_outro_ui = IntroOutroUI(self.WIDTH, self.HEIGHT, self.screen, self.clock)
     def on_tower_selected(self, tower_name):
         self.selected_tower_type = tower_name
 
@@ -56,6 +57,7 @@ class Game:
 
     def update(self):
         if self.player.is_game_over():
+            self.intro_outro_ui.show_fail_outro()
             self.running = False
             return
         if self.waiting_for_next_level:
@@ -71,6 +73,7 @@ class Game:
             if self.level_manager.next_level():
                 self.load_level()
             else:
+                self.intro_outro_ui.show_outro()
                 self.running = False
             self.countdown_active = False
             self.waiting_for_next_level = False
@@ -118,3 +121,6 @@ class Game:
             self.update()
             self.draw()
             self.clock.tick(60)
+
+    def show_intro(self):
+        self.intro_outro_ui.show_intro()
