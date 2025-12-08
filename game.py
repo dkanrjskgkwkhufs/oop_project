@@ -1,9 +1,9 @@
 import pygame
+import time
 from towers.tower_manager import TowerManager
 from player import Player
 from levels.level_manager import LevelManager
 from ui.tower_selection_ui import TowerSelectionUI
-
 
 class Game:
     def __init__(self):
@@ -14,12 +14,13 @@ class Game:
         self.running = True
         self.level_manager = LevelManager()
         self.load_level()
-
         self.tower_ui = TowerSelectionUI()
-        self.selected_tower_type = None  # 콜백으로 전달받을 변수
+        self.selected_tower_type = None
+        self.waiting_for_next_level = False
+        self.next_level_time = 0
+        self.level_clear_delay = 3
 
     def on_tower_selected(self, tower_name):
-        print(f"[UI] 선택됨 → {tower_name}")
         self.selected_tower_type = tower_name
 
     def load_level(self):
@@ -46,16 +47,22 @@ class Game:
                     return
                 if self.selected_tower_type:
                     self.tower_manager.place_tower(
-                        self.selected_tower_type,
-                        event.pos,
-                        self.player
+                        self.selected_tower_type, event.pos, self.player
                     )
                     return
 
     def update(self):
         if self.player.is_game_over():
-            print("Game Over!")
             self.running = False
+            return
+        if self.waiting_for_next_level:
+            if time.time() < self.next_level_time:
+                return
+            if self.level_manager.next_level():
+                self.load_level()
+            else:
+                self.running = False
+            self.waiting_for_next_level = False
             return
 
         self.wave_manager.update(self.player.base)
@@ -66,14 +73,9 @@ class Game:
             if not proj.alive:
                 self.projectiles.remove(proj)
 
-        # 레벨 클리어 체크
         if self.wave_manager.is_wave_cleared():
-            print(f"Level {self.level_manager.get_current_level().number} Cleared!")
-            if self.level_manager.next_level():
-                self.load_level()
-            else:
-                print("모든 레벨 클리어! 게임 종료")
-                self.running = False
+            self.waiting_for_next_level = True
+            self.next_level_time = time.time() + self.level_clear_delay
 
     def draw(self):
         self.screen.fill((30, 30, 30))
@@ -85,6 +87,11 @@ class Game:
             proj.draw(self.screen)
         self.player.draw_ui(self.screen)
         self.tower_ui.draw(self.screen)
+        if self.waiting_for_next_level:
+            font = pygame.font.Font(None, 48)
+            text = font.render("Level Cleared!", True, (255, 255, 0))
+            self.screen.blit(text, (290, 260))
+
         pygame.display.flip()
 
     def run(self):

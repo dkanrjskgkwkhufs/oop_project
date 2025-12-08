@@ -1,4 +1,5 @@
 from levels.level import Level
+from maps.campus_map import CampusMap
 from waves.wave_manager import WaveManager
 from maps.straight_map import StraightMap
 from maps.zigzag_map import ZigZagMap
@@ -8,9 +9,9 @@ from enemys.enemy_cplus import EnemyCplus
 class LevelManager:
     def __init__(self):
         self.levels = [
-            Level(1, "straight", waves=5, enemy_types=[(EnemyCplus, 1)]),
-            Level(2, "zigzag", waves=10, enemy_types=[(EnemyAttendance, 1)]),
-            Level(3, "zigzag", waves=20, enemy_types=[(EnemyCplus, 70), (EnemyAttendance, 30)])
+            Level(1, "campus", waves=50, enemy_types=[(EnemyCplus, 1)]),
+            Level(2, "campus", waves=50, enemy_types=[(EnemyAttendance, 1)]),
+            Level(3, "campus", waves=50, enemy_types=[(EnemyCplus, 70), (EnemyAttendance, 30)])
         ]
         self.current_level_index = 0
         self.current_wave_manager = None
@@ -30,6 +31,8 @@ class LevelManager:
             game_map = StraightMap()
         elif level.map_type == "zigzag":
             game_map = ZigZagMap()
+        elif level.map_type == "campus":
+            game_map = CampusMap()
         else:
             raise ValueError("Unknown map type")
         self.current_wave_manager = WaveManager(
